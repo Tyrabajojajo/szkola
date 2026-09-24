@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1790231141 source:c:\users\administrator\desktop\5tp\gr2\zapis do pliku\rekordy\main.cpp
+	<iostream>
+	<fstream>
+	<string>
+	<algorithm>
+
