@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document </title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="schoolName">
+        <form action="index.html" id="taskForm" method="post">
+            <label for="task">Task</label>
+            <input type="text" id="task"><br>
+            <label for="prio">Priority</label>
+            <select name="prio" id="prio">
+                <option value="low">low</option>
+                <option value="medium">medium</option>
+                <option value="high">high</option>
+            </select>
+            <br>
+            <button type="submit">Add</button>
+        </form>
+        <ul id="list"></ul>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
