@@ -1,7 +1,3 @@
-Jasne — poniżej masz gotowe, estetyczne README do wklejenia na GitHuba. Jest napisane prosto i pasuje do projektu szkolnego/akademickiego.
-
-:::writing{variant="document" id="58321" title="README.md"}
-
 # Porównanie struktur danych w C++
 
 Program porównuje wydajność trzech struktur danych w języku **C++**:
