@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>geralt</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="card">
+
+        <div class="header">
+            <div class="avatar"><img src="geralt.jpg" alt="geralt"></div>
+
+            <div>
+                <h1 id="playerName"></h1>
+                <div class="subtitle">Łowca potworów</div>
+            </div>
+
+            <div class="level">
+                LVL <span id="level"></span>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Zdrowie</div>
+
+            <div class="hp-info">
+                <span>HP</span>
+
+                <span class="hp">
+                    <span id="hp"></span> /
+                    <span id="maxHP"></span>
+                </span>
+            </div>
+
+            <div class="bar">
+                <div class="hp-fill" id="hpBar"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Statystyki</div>
+
+            <div class="stats">
+
+                <div class="stat">
+                    <span>POZIOM</span>
+                    <strong id="levelStat"></strong>
+                </div>
+
+                <div class="stat">
+                    <span>ZŁOTO</span>
+                    <strong class="gold">
+                        🪙 <span id="gold"></span>
+                    </strong>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Broń</div>
+
+            <div class="weapon">
+
+                <div>
+                    ⚔️
+                    <span class="weapon-name" id="weaponName"></span>
+                </div>
+
+                <div class="damage">
+                    ⚡ <span id="damage"></span> DMG
+                </div>
+
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Ekwipunek</div>
+
+            <div class="inventory" id="inventory"></div>
+        </div>
+
+        <div class="footer">
+            
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
