@@ -79,7 +79,7 @@ public:
     {
         if (liczbaOsob >= 30)
         {
-            cout << "Nie mozna dodac osoby. Klasa jest pelna" << endl;
+            cout << "Nie mozna dodac osoby" << endl;
             return;
         }
 
