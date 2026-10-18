@@ -1,187 +1,217 @@
+
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
+
 body {
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 30px 15px;
+    background: #151513;
+    color: #eee9dc;
     font-family: Arial, sans-serif;
-    color: #eee;
-    background:
-        radial-gradient(
-            circle at top,
-            #343434 0%,
-            #111 45%,
-            #050505 100%
-        );
 }
-.card {
-    width: 420px;
-    padding: 28px;
-    border: 1px solid #555;
-    border-radius: 20px;
-    background: rgba(20, 20, 20, 0.95);
-    box-shadow:
-        0 0 40px rgba(0, 0, 0, .8),
-        inset 0 0 30px rgba(255, 255, 255, .03);
+
+.character {
+    width: 100%;
+    max-width: 540px;
+    padding: 35px;
+    background: #22221e;
+    border-radius: 18px;
+    box-shadow: 0 15px 45px #0006;
 }
+
 .header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 18px;
-    margin-bottom: 25px;
+    margin-bottom: 35px;
 }
-.avatar {
-    width: 75px;
-    height: 75px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 2px solid #aaa;
-    box-shadow:
-        0 0 20px rgba(255, 255, 255, .15);
 
-    flex-shrink: 0;
-}
-.avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-h1 {
-    font-size: 30px;
-    letter-spacing: 2px;
-}
 .subtitle {
-    margin-top: 4px;
-    color: #999;
-}
-.level {
-    margin-left: auto;
-    padding: 8px 12px;
-    border-radius: 10px;
-    background: #292929;
-    color: #d6a84f;
-    font-weight: bold;
-}
-.section {
-    margin-top: 22px;
-}
-.section-title {
+    color: #b8a36a;
+    font-size: 11px;
+    letter-spacing: 3px;
     margin-bottom: 10px;
-    color: #aaa;
-    font-size: 13px;
-    text-transform: uppercase;
+}
+
+h1 {
+    font-family: Georgia, serif;
+    font-size: 42px;
+    margin-bottom: 8px;
+}
+
+.level {
+    color: #aaa69a;
+    font-size: 14px;
     letter-spacing: 2px;
 }
-.hp-info {
+
+.symbol {
+    font-size: 48px;
+    color: #b8a36a;
+}
+
+.health {
+    margin-bottom: 30px;
+}
+
+.health-info {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 7px;
-}
-.hp {
-    color: #e74c3c;
-    font-weight: bold;
-}
-.bar {
-    width: 100%;
-    height: 13px;
-    overflow: hidden;
-    border-radius: 20px;
-    background: #292929;
-}
-.hp-fill {
-    width: 85%;
-    height: 100%;
-    border-radius: inherit;
-    background:
-        linear-gradient(
-            90deg,
-            #8b1e1e,
-            #e74c3c
-        );
-    box-shadow:
-        0 0 12px rgba(231, 76, 60, .5);
-    transition: width .5s ease;
-}
-.stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-.stat {
-    padding: 15px;
-    border-radius: 12px;
-    background: #191919;
-    border: 1px solid #303030;
-}
-.stat span {
-    display: block;
-
-    color: #888;
-
+    margin-bottom: 12px;
     font-size: 12px;
+    letter-spacing: 1px;
+    color: #c9c3b4;
+}
 
-    margin-bottom: 5px;
+.health-track {
+    height: 10px;
+    background: #393932;
+    border-radius: 10px;
+    overflow: hidden;
 }
-.stat strong {
-    font-size: 20px;
+
+.health-fill {
+    height: 100%;
+    background: #8c403b;
+    border-radius: 10px;
 }
-.gold {
-    color: #d6a84f;
+
+.stats {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
 }
+
+.stat {
+    flex: 1;
+    padding: 20px;
+    background: #2b2b25;
+    border-radius: 12px;
+}
+
+.stat-icon {
+    color: #b8a36a;
+    font-size: 23px;
+}
+
+.stat p {
+    margin: 14px 0 8px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: #aaa69a;
+}
+
+.stat h2 {
+    font-family: Georgia, serif;
+    font-size: 28px;
+}
+
 .weapon {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 18px;
-    border-radius: 14px;
-    background:
-        linear-gradient(
-            135deg,
-            #202020,
-            #111
-        );
-    border: 1px solid #444;
-}
-.weapon-name {
-    font-size: 18px;
-    font-weight: bold;
-}
-.damage {
-    color: #e74c3c;
-    font-weight: bold;
-}
-.inventory {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-.item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 12px;
-    border-radius: 10px;
-    background: #252525;
-    border: 1px solid #3d3d3d;
-    color: #ccc;
-}
-.item img {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    border-radius: 8px;
-    border: 1px solid #555;
+    gap: 20px;
+    padding: 22px;
+    background: #2b2b25;
+    border-radius: 12px;
+    margin-bottom: 32px;
 }
 
-.footer {
-    margin-top: 25px;
+.weapon-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 65px;
+    height: 65px;
+    flex-shrink: 0;
+    background: #39372d;
+    border-radius: 12px;
+    color: #c7b47b;
+    font-size: 32px;
+}
+
+.weapon h2 {
+    font-family: Georgia, serif;
+    font-size: 20px;
+    margin-bottom: 7px;
+}
+
+.weapon-desc {
+    color: #aaa69a;
+    font-size: 13px;
+}
+
+.inventory h2 {
+    font-family: Georgia, serif;
+    font-size: 22px;
+    margin-bottom: 18px;
+}
+
+.items {
+    display: flex;
+    gap: 15px;
+}
+
+.item {
+    flex: 1;
+    min-width: 0;
+    padding: 15px;
+    background: #2b2b25;
+    border-radius: 12px;
     text-align: center;
-    color: #555;
-    font-size: 11px;
-    letter-spacing: 2px;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.item:hover {
+    background: #38372f;
+    transform: translateY(-4px);
+}
+
+.item img {
+    width: 100%;
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 12px;
+}
+
+.item p {
+    font-size: 14px;
+    color: #d7d0bf;
+}
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 35px;
+    color: #77766c;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+}
+
+@media (max-width: 450px) {
+    .character {
+        padding: 22px;
+    }
+
+    h1 {
+        font-size: 34px;
+    }
+
+    .stat {
+        padding: 15px;
+    }
+
+    .weapon {
+        padding: 15px;
+    }
+
+    footer {
+        font-size: 8px;
+    }
 }

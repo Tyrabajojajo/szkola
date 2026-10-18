@@ -1,3 +1,4 @@
+
 const player = {
     name: "Geralt",
     level: 12,
@@ -18,63 +19,36 @@ const player = {
         {
             name: "Bomba",
             image: "bomba.jpg"
-        },
+        }
     ]
 };
 
-// PODSTAWOWE INFORMACJE
-
-document.getElementById("playerName").textContent =
-    player.name;
+document.getElementById("name").textContent = player.name;
 
 document.getElementById("level").textContent =
-    player.level;
+    "POZIOM " + player.level;
 
-document.getElementById("levelStat").textContent =
-    player.level;
+document.getElementById("hp-text").textContent =
+    player.hp + " / " + player.maxHP;
 
-document.getElementById("gold").textContent =
-    player.gold;
+document.getElementById("hp-bar").style.width =
+    (player.hp / player.maxHP * 100) + "%";
 
-
-// HP
-
-document.getElementById("hp").textContent =
-    player.hp;
-
-document.getElementById("maxHP").textContent =
-    player.maxHP;
-
-const hpPercent =
-    (player.hp / player.maxHP) * 100;
-
-document.getElementById("hpBar").style.width =
-    hpPercent + "%";
-
-
-// BROŃ
-
-document.getElementById("weaponName").textContent =
-    player.weapon.name;
+document.getElementById("gold").textContent = player.gold;
 
 document.getElementById("damage").textContent =
     player.weapon.dmg;
 
+document.getElementById("weapon").textContent =
+    player.weapon.name;
 
-// EKWIPUNEK
+const items = document.getElementById("items");
 
-const inventory =
-    document.getElementById("inventory");
-
-    player.inventory.forEach(item => {
-
-        const element = document.createElement("div");
-        element.className = "item";
-        element.innerHTML = `
+player.inventory.forEach(function(item) {
+    items.innerHTML += `
+        <div class="item">
             <img src="${item.image}" alt="${item.name}">
-            <span>${item.name}</span>
-        `;
-
-        inventory.appendChild(element);
-    });
-    
+            <p>${item.name}</p>
+        </div>
+    `;
+});
