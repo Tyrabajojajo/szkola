@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1792410578 source:c:\users\admin\desktop\fzaprzyjaznione\bateria.cpp
+	"bateria.h"
+
+1792410557 c:\users\admin\desktop\fzaprzyjaznione\bateria.h
+	<string>
+
+1792410594 source:c:\users\admin\desktop\fzaprzyjaznione\main.cpp
+	<iostream>
+	"bateria.h"
+
