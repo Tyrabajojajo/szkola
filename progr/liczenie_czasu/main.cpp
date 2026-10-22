@@ -24,49 +24,50 @@ int main() {
     // VECTOR
     {
         vector<int> v;
+        v.reserve(N + K);
 
-        auto start = high_resolution_clock::now();
+        auto start = steady_clock::now();
 
         for (int x : liczby)
             v.push_back(x);
 
-        auto koniec = high_resolution_clock::now();
+        auto koniec = steady_clock::now();
 
         cout << "VECTOR\n";
         cout << "Wstawienie 100000: "
-             << duration_cast<milliseconds>(koniec - start).count()
+             << duration<double, milli>(koniec - start).count()
              << " ms\n";
 
-        start = high_resolution_clock::now();
+        start = steady_clock::now();
 
         sort(v.begin(), v.end());
 
-        koniec = high_resolution_clock::now();
+        koniec = steady_clock::now();
 
         cout << "Sortowanie: "
-             << duration_cast<milliseconds>(koniec - start).count()
+             << duration<double, milli>(koniec - start).count()
              << " ms\n";
 
-        start = high_resolution_clock::now();
+        start = steady_clock::now();
 
         for (int i = 0; i < K; i++)
             v.insert(v.begin() + 50000 + i, liczby[i]);
 
-        koniec = high_resolution_clock::now();
+        koniec = steady_clock::now();
 
         cout << "Wstawienie 50000 do srodka: "
-             << duration_cast<milliseconds>(koniec - start).count()
+             << duration<double, milli>(koniec - start).count()
              << " ms\n";
 
-        start = high_resolution_clock::now();
+        start = steady_clock::now();
 
         for (int i = 0; i < K; i++)
             v.erase(v.begin() + 50000);
 
-        koniec = high_resolution_clock::now();
+        koniec = steady_clock::now();
 
         cout << "Usuniecie 50000 ze srodka: "
-             << duration_cast<milliseconds>(koniec - start).count()
+             << duration<double, milli>(koniec - start).count()
              << " ms\n\n";
     }
 
@@ -74,31 +75,31 @@ int main() {
     {
         int* tab = new int[N + K];
 
-        auto start = high_resolution_clock::now();
+        auto start = steady_clock::now();
 
         for (int i = 0; i < N; i++)
             tab[i] = liczby[i];
 
-        auto koniec = high_resolution_clock::now();
+        auto koniec = steady_clock::now();
 
         cout << "TABLICA\n";
         cout << "Wstawienie 100000: "
-             << duration_cast<milliseconds>(koniec - start).count()
+             << duration<double, milli>(koniec - start).count()
              << " ms\n";
 
-        start = high_resolution_clock::now();
+        start = steady_clock::now();
 
         sort(tab, tab + N);
 
-        koniec = high_resolution_clock::now();
+        koniec = steady_clock::now();
 
         cout << "Sortowanie: "
-             << duration_cast<milliseconds>(koniec - start).count()
+             << duration<double, milli>(koniec - start).count()
              << " ms\n";
 
         int rozmiar = N;
 
-        start = high_resolution_clock::now();
+        start = steady_clock::now();
 
         for (int i = 0; i < K; i++) {
             int pozycja = 50000 + i;
@@ -110,13 +111,13 @@ int main() {
             rozmiar++;
         }
 
-        koniec = high_resolution_clock::now();
+        koniec = steady_clock::now();
 
         cout << "Wstawienie 50000 do srodka: "
-             << duration_cast<milliseconds>(koniec - start).count()
+             << duration<double, milli>(koniec - start).count()
              << " ms\n";
 
-        start = high_resolution_clock::now();
+        start = steady_clock::now();
 
         for (int i = 0; i < K; i++) {
             for (int j = 50000; j < rozmiar - 1; j++)
@@ -125,10 +126,10 @@ int main() {
             rozmiar--;
         }
 
-        koniec = high_resolution_clock::now();
+        koniec = steady_clock::now();
 
         cout << "Usuniecie 50000 ze srodka: "
-             << duration_cast<milliseconds>(koniec - start).count()
+             << duration<double, milli>(koniec - start).count()
              << " ms\n\n";
 
         delete[] tab;
@@ -138,56 +139,56 @@ int main() {
     {
         list<int> lista;
 
-        auto start = high_resolution_clock::now();
+        auto start = steady_clock::now();
 
         for (int x : liczby)
             lista.push_back(x);
 
-        auto koniec = high_resolution_clock::now();
+        auto koniec = steady_clock::now();
 
         cout << "STD::LIST\n";
         cout << "Wstawienie 100000: "
-             << duration_cast<milliseconds>(koniec - start).count()
+             << duration<double, milli>(koniec - start).count()
              << " ms\n";
 
-        start = high_resolution_clock::now();
+        start = steady_clock::now();
 
         lista.sort();
 
-        koniec = high_resolution_clock::now();
+        koniec = steady_clock::now();
 
         cout << "Sortowanie: "
-             << duration_cast<milliseconds>(koniec - start).count()
+             << duration<double, milli>(koniec - start).count()
              << " ms\n";
 
         auto it = lista.begin();
         advance(it, 50000);
 
-        start = high_resolution_clock::now();
+        start = steady_clock::now();
 
         for (int i = 0; i < K; i++) {
             it = lista.insert(it, liczby[i]);
             ++it;
         }
 
-        koniec = high_resolution_clock::now();
+        koniec = steady_clock::now();
 
         cout << "Wstawienie 50000 do srodka: "
-             << duration_cast<milliseconds>(koniec - start).count()
+             << duration<double, milli>(koniec - start).count()
              << " ms\n";
 
         it = lista.begin();
         advance(it, 50000);
 
-        start = high_resolution_clock::now();
+        start = steady_clock::now();
 
         for (int i = 0; i < K; i++)
             it = lista.erase(it);
 
-        koniec = high_resolution_clock::now();
+        koniec = steady_clock::now();
 
         cout << "Usuniecie 50000 ze srodka: "
-             << duration_cast<milliseconds>(koniec - start).count()
+             << duration<double, milli>(koniec - start).count()
              << " ms\n";
     }
 

@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1791444321 source:c:\users\administrator\documents\projektyst4tp\szkola\progr\liczenie_czasu\main.cpp
+	<iostream>
+	<vector>
+	<list>
+	<algorithm>
+	<chrono>
+	<random>
+
