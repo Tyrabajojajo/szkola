@@ -1,64 +1,61 @@
-🔢 Licznik punktów WPF
+# 🔢 Licznik punktów
 
-Prosta aplikacja desktopowa stworzona w C# i WPF, która umożliwia szybkie zliczanie punktów za pomocą intuicyjnego interfejsu graficznego.
+Prosta aplikacja desktopowa napisana w **C# i WPF**, która pozwala na szybkie zliczanie punktów. Program posiada czytelny interfejs graficzny oraz trzy przyciski umożliwiające zmianę wyniku.
 
-📸 Opis projektu
+## 🖥️ Funkcje
 
-Licznik punktów to niewielki projekt, którego celem jest poznanie podstaw tworzenia aplikacji okienkowych w technologii WPF. Program pozwala zwiększać i zmniejszać wynik oraz resetować licznik do zera.
+- ➕ **Dodaj 1** — zwiększa licznik o jeden punkt.
+- ➖ **Odejmij 1** — zmniejsza licznik o jeden punkt.
+- 🔄 **Resetuj** — ustawia licznik ponownie na `0`.
+- 🔢 **Aktualny wynik** — wyświetla bieżącą liczbę punktów.
+- 🎨 **Prosty interfejs** — jasne tło, zaokrąglony panel i niebieski akcent kolorystyczny.
 
-✨ Funkcje
-➕ Dodawanie punktów — zwiększanie wyniku o 1.
-➖ Odejmowanie punktów — zmniejszanie wyniku o 1.
-🔄 Resetowanie licznika — przywracanie wyniku do 0.
-🎨 Prosty interfejs graficzny — czytelny układ i przyjazna kolorystyka.
-⚡ Aktualizacja wyniku — natychmiastowe wyświetlanie zmian.
-🛠️ Technologie
-C# — logika aplikacji.
-WPF (Windows Presentation Foundation) — interfejs graficzny.
-XAML — definiowanie wyglądu okna i kontrolek.
-.NET — platforma uruchomieniowa aplikacji.
-📂 Struktura projektu
+## 🛠️ Technologie
+
+- **C#** — obsługa logiki programu.
+- **WPF (Windows Presentation Foundation)** — interfejs graficzny.
+- **XAML** — wygląd i układ okna aplikacji.
+- **.NET** — środowisko uruchomieniowe aplikacji.
+
+## 📂 Struktura projektu
+
+```text
 LicznikWPF/
-├── App.xaml
-├── App.xaml.cs
-├── MainWindow.xaml
-├── MainWindow.xaml.cs
-└── LicznikWPF.csproj
+├── MainWindow.xaml       # Interfejs aplikacji
+├── MainWindow.xaml.cs    # Logika licznika
+├── App.xaml              # Konfiguracja aplikacji
+├── App.xaml.cs           # Punkt wejścia aplikacji
+└── LicznikWPF.csproj     # Plik projektu
+```
 
+*Struktura może się nieznacznie różnić w zależności od konfiguracji projektu.*
 
-Struktura może się nieznacznie różnić w zależności od wersji Visual Studio i .NET.
+## 🚀 Uruchomienie
 
-🚀 Uruchomienie
-Sklonuj repozytorium:
-git clone https://github.com/TWOJ-LOGIN/LicznikWPF.git
+1. Sklonuj repozytorium:
 
-Otwórz plik LicznikWPF.sln lub LicznikWPF.csproj w Visual Studio.
-Poczekaj na załadowanie projektu.
-Uruchom aplikację klawiszem F5.
-Wymagania
-System Windows.
-Visual Studio z zainstalowanym obciążeniem Programowanie aplikacji klasycznych .NET.
-Odpowiedni pakiet .NET dla użytej wersji projektu.
-📖 Jak korzystać?
-Uruchom aplikację.
-Kliknij Dodaj 1, aby zwiększyć liczbę punktów.
-Kliknij Odejmij 1, aby zmniejszyć liczbę punktów.
-Kliknij Resetuj, aby przywrócić wynik do zera.
-🎯 Cel projektu
+   ```bash
+   git clone URL_REPOZYTORIUM
+   ```
 
-Projekt powstał w celach edukacyjnych. Pomaga zrozumieć podstawy:
+2. Otwórz plik `LicznikWPF.sln` lub `LicznikWPF.csproj` w Visual Studio.
+3. Poczekaj na przywrócenie wymaganych zależności.
+4. Uruchom aplikację przyciskiem **Start** lub klawiszem `F5`.
 
-tworzenia interfejsów w XAML,
-obsługi zdarzeń Click,
-łączenia XAML z kodem C#,
-korzystania ze zmiennych i metod,
-aktualizowania elementów interfejsu.
-🔮 Możliwe rozszerzenia
-Zapisywanie wyniku do pliku.
-Obsługa dwóch graczy.
-Historia zmian punktacji.
-Ustawianie własnej wartości dodawanych punktów.
-Obsługa skrótów klawiszowych.
-📄 Licencja
+## 📋 Jak działa program?
 
-Projekt udostępniony do celów edukacyjnych. Możesz go rozwijać i dostosowywać do własnych potrzeb.
+Licznik przechowuje aktualną liczbę punktów w zmiennej `count`.
+
+- Po kliknięciu **Dodaj 1** wartość zwiększa się o jeden.
+- Po kliknięciu **Odejmij 1** wartość zmniejsza się o jeden.
+- Po kliknięciu **Resetuj** wartość wraca do zera.
+
+Po każdej zmianie wynik jest aktualizowany w elemencie `CounterBlock`.
+
+## 🎯 Cel projektu
+
+Projekt służy do nauki podstaw programowania w C#, obsługi zdarzeń oraz tworzenia interfejsów graficznych w technologii WPF.
+
+## 📄 Licencja
+
+Projekt edukacyjny. Możesz dodać własną licencję, jeśli planujesz udostępniać kod innym osobom.
