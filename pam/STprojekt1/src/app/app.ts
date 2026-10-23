@@ -7,5 +7,6 @@ import { Component, signal } from '@angular/core';
   templateUrl: './app.html',
 })
 export class App {
-  protected readonly title = signal('STprojekt1');
+  users: string[] = ['Jan', 'Mscislawa', 'Maja']
+
 }

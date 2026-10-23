@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, Input} from "@angular/core";
 
 @Component({
     selector: 'app-users',
@@ -7,5 +7,7 @@ import { Component } from "@angular/core";
     standalone: false
 })
 export class UsersComponents{
+   @Input() usersList: string[] = ['Brak uzytkownikow'];
 
+   
 }
