@@ -1,14 +1,20 @@
+
 body {
     font-family: Arial, sans-serif;
     padding: 40px 20px;
-    background-image: url(background.jpg);
+    background-color: #171713;
+    background-image: url("background.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
 
 .character {
     max-width: 850px;
     margin: 0 auto;
     padding: 25px;
-    background: black;
+    background: #080808;
+    box-sizing: border-box;
 }
 
 .header {
@@ -19,6 +25,21 @@ body {
     border-bottom: 1px solid grey;
 }
 
+h1 {
+    font-family: Georgia, serif;
+    font-size: 36px;
+    font-weight: normal;
+    color: white;
+    margin: 0;
+}
+
+.level {
+    margin-top: 8px;
+    margin-bottom: 0;
+    color: grey;
+    font-size: 13px;
+}
+
 .subtitle {
     color: grey;
     font-size: 11px;
@@ -26,24 +47,37 @@ body {
     letter-spacing: 1px;
 }
 
-h1 {
-    font-family: Georgia, serif;
-    font-size: 36px;
-    font-weight: normal;
+/* ZAKŁADKI */
+
+.tabs {
+    display: flex;
+    gap: 25px;
+    border-bottom: 1px solid grey;
+    margin-bottom: 10px;
+}
+
+.tab {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: grey;
+    padding: 15px 5px;
+    cursor: pointer;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+.tab:hover,
+.tab.active {
     color: white;
+    border-bottom-color: #a52a2a;
 }
 
-.level {
-    margin-top: 8px;
-    color: grey;
-    font-size: 13px;
+.tab-content[hidden] {
+    display: none;
 }
 
-.symbol {
-    font-size: 38px;
-    color: grey;
-    padding-right: 10px;
-}
+/* ZDROWIE */
 
 .health {
     padding: 22px 0;
@@ -59,13 +93,16 @@ h1 {
 
 .health-track {
     height: 7px;
-    background: grey;
+    background: #444;
 }
 
 .health-fill {
     height: 100%;
-    background: red;
+    background: #a52a2a;
+    transition: width 0.3s;
 }
+
+/* STATYSTYKI */
 
 .stats {
     display: flex;
@@ -90,14 +127,17 @@ h1 {
 .stat p {
     color: white;
     font-size: 11px;
-    margin-bottom: 5px;
+    margin: 0 0 5px;
 }
 
 .stat h2 {
     font-size: 20px;
     font-weight: normal;
     color: white;
+    margin: 0;
 }
+
+/* BROŃ */
 
 .weapon {
     color: white;
@@ -114,7 +154,7 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: black;
+    background: #202020;
     color: grey;
     font-size: 30px;
 }
@@ -123,8 +163,10 @@ h1 {
     font-family: Georgia, serif;
     font-size: 21px;
     font-weight: normal;
-    margin-bottom: 6px;
+    margin: 0 0 6px;
 }
+
+/* EKWIPUNEK */
 
 .inventory {
     padding-top: 25px;
@@ -139,6 +181,7 @@ h1 {
 
 .items {
     display: flex;
+    flex-wrap: wrap;
     gap: 30px;
 }
 
@@ -154,19 +197,124 @@ h1 {
     background: #303129;
     padding: 8px;
     margin-bottom: 10px;
+    box-sizing: border-box;
 }
 
 .item p {
     font-size: 13px;
     color: white;
+    margin: 0;
 }
 
-footer {
+.inventory-icon {
+    width: 90px;
+    height: 90px;
+    background: #303129;
     display: flex;
-    justify-content: space-between;
-    margin-top: 30px;
-    padding-top: 15px;
-    border-top: 1px solid grey;
-    color: white;
-    font-size: 10px;
+    align-items: center;
+    justify-content: center;
+    font-size: 35px;
+    margin: 0 auto 10px;
 }
+
+.shop-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 25px 0 15px;
+    border-bottom: 1px solid grey;
+}
+
+.shop-header h2 {
+    color: white;
+    font-family: Georgia, serif;
+    font-weight: normal;
+    font-size: 27px;
+    margin: 5px 0 0;
+}
+
+.shop-gold {
+    color: #d6b66b;
+    font-size: 14px;
+}
+
+.shop-message {
+    color: #aaa;
+    font-size: 13px;
+    min-height: 18px;
+    margin: 18px 0;
+}
+
+.shop-message.success {
+    color: #8fbd83;
+}
+
+.shop-message.error {
+    color: #e07878;
+}
+
+.shop-items {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+    padding-bottom: 20px;
+}
+
+.shop-item {
+    background: #151515;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+}
+
+.shop-item-image {
+    display: block;
+    width: 100%;
+    height: 140px;
+    object-fit: contain;
+    background: #252520;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.shop-item h3 {
+    color: white;
+    font-family: Georgia, serif;
+    font-weight: normal;
+    font-size: 18px;
+    margin: 0;
+}
+
+.shop-item .description {
+    color: #999;
+    font-size: 12px;
+    line-height: 1.5;
+    min-height: 36px;
+    margin: 0;
+}
+
+.shop-item .price {
+    color: #d6b66b;
+    font-size: 14px;
+    margin-top: auto;
+    margin-bottom: 0;
+}
+
+.buy-button {
+    background: #292929;
+    color: white;
+    padding: 11px;
+    cursor: pointer;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.buy-button:hover {
+    background: #742323;
+    border-color: #a52a2a;
+}
+
+
+
