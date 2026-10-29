@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1793258181 source:c:\users\administrator\szkola\progr\listy\main.cpp
+	<iostream>
+	<fstream>
+
