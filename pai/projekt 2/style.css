@@ -310,7 +310,7 @@ h1 {
 
 .quest-header {
     padding: 25px 0 15px;
-    border-bottom: 1px solid grey;
+    
 }
 
 .quest-header h2 {
@@ -391,4 +391,22 @@ h1 {
     color: #777;
     font-size: 13px;
     padding: 10px 0;
+}
+
+/* UŻYWANIE PRZEDMIOTÓW */
+
+.item {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.item:hover {
+    transform: translateY(-4px);
+}
+
+.inventory-message {
+    color: #8fbd83;
+    font-size: 13px;
+    margin-top: 20px;
+    min-height: 18px;
 }

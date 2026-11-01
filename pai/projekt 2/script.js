@@ -1,3 +1,4 @@
+
 const player = {
     name: "Geralt",
     level: 13,
@@ -102,6 +103,7 @@ const goldElement = document.getElementById("gold");
 const damageElement = document.getElementById("damage");
 const weaponElement = document.getElementById("weapon");
 const itemsElement = document.getElementById("items");
+const inventoryMessage = document.getElementById("inventory-message");
 
 const shopGold = document.getElementById("shop-gold");
 const shopItems = document.getElementById("shop-items");
@@ -157,6 +159,13 @@ function renderInventory() {
 
         div.appendChild(img);
         div.appendChild(p);
+
+        // Bomba nie może być używana
+        if (item.type !== "bomb") {
+            div.addEventListener("click", function() {
+                useItem(item.type);
+            });
+        }
 
         itemsElement.appendChild(div);
     });
@@ -239,6 +248,68 @@ function addToInventory(name, type, image = "") {
             quantity: 1
         });
     }
+}
+
+
+// UŻYWANIE PRZEDMIOTÓW
+
+function useItem(type) {
+    const item = player.inventory.find(function(item) {
+        return item.type === type;
+    });
+
+    if (!item) {
+        return;
+    }
+
+    switch (type) {
+        case "healing":
+            if (player.hp >= player.maxHP) {
+                inventoryMessage.textContent =
+                    "Masz już pełne zdrowie!";
+                return;
+            }
+
+            player.hp += 30;
+
+            if (player.hp > player.maxHP) {
+                player.hp = player.maxHP;
+            }
+
+            inventoryMessage.textContent =
+                "Użyto mikstury leczenia! Przywrócono zdrowie.";
+
+            break;
+
+        case "strength":
+            player.weapon.dmg += 10;
+
+            inventoryMessage.textContent =
+                "Użyto mikstury siły! Obrażenia zwiększone o 10.";
+
+            break;
+
+        case "sword":
+            inventoryMessage.textContent =
+                "Ten miecz jest już wyposażony.";
+
+            return;
+
+        default:
+            return;
+    }
+
+    // Zmniejszenie ilości przedmiotu
+    item.quantity--;
+
+    // Usunięcie przedmiotu, jeśli ilość wynosi 0
+    if (item.quantity <= 0) {
+        player.inventory = player.inventory.filter(function(inventoryItem) {
+            return inventoryItem !== item;
+        });
+    }
+
+    updatePlayer();
 }
 
 
