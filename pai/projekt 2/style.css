@@ -1,4 +1,3 @@
-
 body {
     font-family: Arial, sans-serif;
     padding: 40px 20px;
@@ -206,16 +205,7 @@ h1 {
     margin: 0;
 }
 
-.inventory-icon {
-    width: 90px;
-    height: 90px;
-    background: #303129;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 35px;
-    margin: 0 auto 10px;
-}
+/* SKLEP */
 
 .shop-header {
     display: flex;
@@ -316,5 +306,107 @@ h1 {
     border-color: #a52a2a;
 }
 
+/* QUESTY */
 
+.quest-header {
+    padding: 25px 0 15px;
+    
+}
 
+.quest-header h2 {
+    color: white;
+    font-family: Georgia, serif;
+    font-weight: normal;
+    font-size: 27px;
+    margin: 5px 0 0;
+}
+
+.quests-section {
+    padding-top: 25px;
+}
+
+.quests-section h2 {
+    color: grey;
+    font-size: 13px;
+    font-weight: normal;
+    letter-spacing: 1px;
+    margin-bottom: 18px;
+}
+
+.quest-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.quest-item {
+    background: #151515;
+    padding: 20px;
+}
+
+.quest-item h3 {
+    color: white;
+    font-family: Georgia, serif;
+    font-size: 19px;
+    font-weight: normal;
+    margin: 0 0 10px;
+}
+
+.quest-item .description {
+    color: #999;
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0 0 15px;
+}
+
+.quest-reward {
+    color: #d6b66b;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+.quest-button {
+    background: #292929;
+    color: white;
+    border: 1px solid #444;
+    padding: 11px 15px;
+    cursor: pointer;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.quest-button:hover {
+    background: #742323;
+    border-color: #a52a2a;
+}
+
+.quest-status {
+    color: #8fbd83;
+    font-size: 11px;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.no-quests {
+    color: #777;
+    font-size: 13px;
+    padding: 10px 0;
+}
+
+/* UŻYWANIE PRZEDMIOTÓW */
+
+.item {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.item:hover {
+    transform: translateY(-4px);
+}
+
+.inventory-message {
+    color: #8fbd83;
+    font-size: 13px;
+    margin-top: 20px;
+    min-height: 18px;
+}

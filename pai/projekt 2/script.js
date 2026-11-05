@@ -29,7 +29,7 @@ const player = {
 };
 
 
-//SKLEP
+// SKLEP
 
 const sklep = [
     {
@@ -67,7 +67,33 @@ const sklep = [
 ];
 
 
-//ELEMENTY HTML
+// QUESTY
+
+const quests = [
+    {
+        id: 1,
+        name: "Bestia z Białego Sadu",
+        description: "Wieśniacy donoszą o potworze atakującym podróżnych. Zbadaj okolicę i dowiedz się, co się tam czai.",
+        reward: 100
+    },
+    {
+        id: 2,
+        name: "Zaginiony kupiec",
+        description: "Kupiec nie wrócił z podróży do pobliskiej wioski. Odszukaj go i sprawdź, co się wydarzyło.",
+        reward: 75
+    },
+    {
+        id: 3,
+        name: "Problemy na trakcie",
+        description: "Na trakcie pojawili się bandyci. Mieszkańcy proszą o pomoc w rozwiązaniu problemu.",
+        reward: 50
+    }
+];
+
+let acceptedQuests = [];
+
+
+// ELEMENTY HTML
 
 const nameElement = document.getElementById("name");
 const levelElement = document.getElementById("level");
@@ -77,12 +103,17 @@ const goldElement = document.getElementById("gold");
 const damageElement = document.getElementById("damage");
 const weaponElement = document.getElementById("weapon");
 const itemsElement = document.getElementById("items");
+const inventoryMessage = document.getElementById("inventory-message");
 
 const shopGold = document.getElementById("shop-gold");
 const shopItems = document.getElementById("shop-items");
 const shopMessage = document.getElementById("shop-message");
 
-//AKTUALIZOWANIE POSTACI
+const availableQuests = document.getElementById("available-quests");
+const acceptedQuestsElement = document.getElementById("accepted-quests");
+
+
+// AKTUALIZOWANIE POSTACI
 
 function updatePlayer() {
     nameElement.textContent = player.name;
@@ -101,10 +132,11 @@ function updatePlayer() {
 
     renderInventory();
     renderShop();
+    renderQuests();
 }
 
 
-//EKWIPUNEK
+// EKWIPUNEK
 
 function renderInventory() {
     itemsElement.innerHTML = "";
@@ -117,14 +149,8 @@ function renderInventory() {
         img.alt = item.name;
         img.src = item.image || "";
 
-        const icon = document.createElement("div");
-        icon.className = "inventory-icon";
-        icon.textContent = getItemIcon(item.type);
-        icon.style.display = "none";
-
         img.onerror = function() {
             img.style.display = "none";
-            icon.style.display = "flex";
         };
 
         const p = document.createElement("p");
@@ -132,15 +158,21 @@ function renderInventory() {
             (item.quantity > 1 ? " x" + item.quantity : "");
 
         div.appendChild(img);
-        div.appendChild(icon);
         div.appendChild(p);
+
+        // Bomba nie może być używana
+        if (item.type !== "bomb") {
+            div.addEventListener("click", function() {
+                useItem(item.type);
+            });
+        }
 
         itemsElement.appendChild(div);
     });
 }
 
 
-//WYŚWIETLANIE SKLEPU ZE ZDJĘCIAMI
+// WYŚWIETLANIE SKLEPU
 
 function renderShop() {
     shopItems.innerHTML = "";
@@ -149,13 +181,11 @@ function renderShop() {
         const card = document.createElement("div");
         card.className = "shop-item";
 
-        //Zdjęcie przedmiotu
         const image = document.createElement("img");
         image.className = "shop-item-image";
         image.src = item.image;
         image.alt = item.name;
 
-        //Ukryj zdjęcie, jeśli plik nie istnieje
         image.onerror = function() {
             image.style.display = "none";
         };
@@ -173,6 +203,7 @@ function renderShop() {
 
         const button = document.createElement("button");
         button.className = "buy-button";
+
         button.textContent =
             player.gold >= item.price
                 ? "KUP PRZEDMIOT"
@@ -195,7 +226,7 @@ function renderShop() {
 }
 
 
-//DODAWANIE PRZEDMIOTU DO EKWIPUNKU
+// DODAWANIE PRZEDMIOTU DO EKWIPUNKU
 
 function addToInventory(name, type, image = "") {
     const existingItem = player.inventory.find(function(item) {
@@ -206,7 +237,6 @@ function addToInventory(name, type, image = "") {
         existingItem.quantity =
             (existingItem.quantity || 1) + 1;
 
-        //Uzupełnij obrazek, jeśli wcześniej go nie było
         if (!existingItem.image && image) {
             existingItem.image = image;
         }
@@ -221,8 +251,69 @@ function addToInventory(name, type, image = "") {
 }
 
 
-//KUPOWANIE PRZEDMIOTÓW
+// UŻYWANIE PRZEDMIOTÓW
 
+function useItem(type) {
+    const item = player.inventory.find(function(item) {
+        return item.type === type;
+    });
+
+    if (!item) {
+        return;
+    }
+
+    switch (type) {
+        case "healing":
+            if (player.hp >= player.maxHP) {
+                inventoryMessage.textContent =
+                    "Masz już pełne zdrowie!";
+                return;
+            }
+
+            player.hp += 30;
+
+            if (player.hp > player.maxHP) {
+                player.hp = player.maxHP;
+            }
+
+            inventoryMessage.textContent =
+                "Użyto mikstury leczenia! Przywrócono zdrowie.";
+
+            break;
+
+        case "strength":
+            player.weapon.dmg += 10;
+
+            inventoryMessage.textContent =
+                "Użyto mikstury siły! Obrażenia zwiększone o 10.";
+
+            break;
+
+        case "sword":
+            inventoryMessage.textContent =
+                "Ten miecz jest już wyposażony.";
+
+            return;
+
+        default:
+            return;
+    }
+
+    // Zmniejszenie ilości przedmiotu
+    item.quantity--;
+
+    // Usunięcie przedmiotu, jeśli ilość wynosi 0
+    if (item.quantity <= 0) {
+        player.inventory = player.inventory.filter(function(inventoryItem) {
+            return inventoryItem !== item;
+        });
+    }
+
+    updatePlayer();
+}
+
+
+// KUPOWANIE PRZEDMIOTÓW
 
 function buyItem(id) {
     const item = sklep.find(function(shopItem) {
@@ -238,7 +329,6 @@ function buyItem(id) {
         return;
     }
 
-    //Pobranie złota za przedmiot
     player.gold -= item.price;
 
     switch (item.type) {
@@ -302,8 +392,97 @@ function buyItem(id) {
 }
 
 
+// WYŚWIETLANIE QUESTÓW
 
-//KOMUNIKATY
+function renderQuests() {
+    availableQuests.innerHTML = "";
+    acceptedQuestsElement.innerHTML = "";
+
+    if (quests.length === 0) {
+        availableQuests.innerHTML =
+            '<p class="no-quests">Brak dostępnych zadań.</p>';
+    }
+
+    quests.forEach(function(quest) {
+        const card = document.createElement("div");
+        card.className = "quest-item";
+
+        const title = document.createElement("h3");
+        title.textContent = quest.name;
+
+        const description = document.createElement("p");
+        description.className = "description";
+        description.textContent = quest.description;
+
+        const reward = document.createElement("p");
+        reward.className = "quest-reward";
+        reward.textContent = "🪙 Nagroda: " + quest.reward + " złota";
+
+        const button = document.createElement("button");
+        button.className = "quest-button";
+        button.textContent = "PRZYJMIJ ZADANIE";
+
+        button.addEventListener("click", function() {
+            acceptQuest(quest.id);
+        });
+
+        card.appendChild(title);
+        card.appendChild(description);
+        card.appendChild(reward);
+        card.appendChild(button);
+
+        availableQuests.appendChild(card);
+    });
+
+    if (acceptedQuests.length === 0) {
+        acceptedQuestsElement.innerHTML =
+            '<p class="no-quests">Nie masz jeszcze żadnych przyjętych zadań.</p>';
+    }
+
+    acceptedQuests.forEach(function(quest) {
+        const card = document.createElement("div");
+        card.className = "quest-item";
+
+        const title = document.createElement("h3");
+        title.textContent = quest.name;
+
+        const description = document.createElement("p");
+        description.className = "description";
+        description.textContent = quest.description;
+
+        const status = document.createElement("p");
+        status.className = "quest-status";
+        status.textContent = "ZADANIE PRZYJĘTE";
+
+        card.appendChild(title);
+        card.appendChild(description);
+        card.appendChild(status);
+
+        acceptedQuestsElement.appendChild(card);
+    });
+}
+
+
+// PRZYJMOWANIE QUESTÓW
+
+function acceptQuest(id) {
+    const questIndex = quests.findIndex(function(quest) {
+        return quest.id === id;
+    });
+
+    if (questIndex === -1) {
+        return;
+    }
+
+    const quest = quests.splice(questIndex, 1)[0];
+
+    acceptedQuests.push(quest);
+
+    renderQuests();
+}
+
+
+// KOMUNIKATY
 
 function showMessage(message, type) {
     shopMessage.textContent = message;
@@ -311,7 +490,7 @@ function showMessage(message, type) {
 }
 
 
-//ZMIANA ZAKŁADEK
+// ZMIANA ZAKŁADEK
 
 document.querySelectorAll(".tab").forEach(function(tab) {
     tab.addEventListener("click", function() {
@@ -330,6 +509,6 @@ document.querySelectorAll(".tab").forEach(function(tab) {
 });
 
 
-//URUCHOMIENIE
+// URUCHOMIENIE
 
 updatePlayer();
