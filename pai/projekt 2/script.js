@@ -5,13 +5,11 @@ const player = {
     gold: 100,
     hp: 85,
     maxHP: 100,
-
     weapon: {
         name: "Srebrny miecz",
-        dmg: 35,
+        dmg: 15,
         image: "anigivare.jpg"
     },
-
     inventory: [
         {
             name: "Mikstura leczenia",
@@ -28,487 +26,645 @@ const player = {
     ]
 };
 
-
-// SKLEP
-
-const sklep = [
+const shopItems = [
     {
-        id: "healing",
         name: "Mikstura leczenia",
-        description: "Przywraca 30 punktów zdrowia.",
         price: 15,
-        image: "mikstura.jpg",
-        type: "healing"
+        description: "Przywraca 25 HP",
+        type: "healing",
+        image: "mikstura.jpg"
     },
     {
-        id: "strength",
-        name: "Mikstura siły",
-        description: "Zwiększa obrażenia o 10 punktów.",
+        name: "Wzmocnienie",
         price: 25,
-        image: "sila.png",
-        type: "strength"
+        description: "Zwiększa obrażenia o 10",
+        type: "strength",
+        image: "anigivare.jpg"
     },
     {
-        id: "sword",
-        name: "Ulepszony miecz",
-        description: "Zwiększa obrażenia o 20 punktów.",
+        name: "Lepszy miecz",
         price: 60,
-        image: "arbitrator.jpg",
-        type: "sword"
+        description: "Zwiększa obrażenia o 20",
+        type: "sword",
+        image: "anigivare.jpg"
     },
     {
-        id: "bomb",
         name: "Bomba",
-        description: "Wiedźmiński materiał wybuchowy.",
         price: 20,
-        image: "bomba.jpg",
-        type: "bomb"
+        description: "Zadaje 25 obrażeń podczas walki",
+        type: "bomb",
+        image: "bomba.jpg"
     }
 ];
-
-
-// QUESTY
 
 const quests = [
     {
         id: 1,
         name: "Bestia z Białego Sadu",
-        description: "Wieśniacy donoszą o potworze atakującym podróżnych. Zbadaj okolicę i dowiedz się, co się tam czai.",
-        reward: 100
+        description: "Pokonaj wilka terroryzującego okolicę.",
+        reward: 100,
+        enemy: {
+            name: "Wilk",
+            image: "wilk.jpg",
+            hp: 100,
+            damage: 18
+        }
     },
     {
         id: 2,
         name: "Zaginiony kupiec",
-        description: "Kupiec nie wrócił z podróży do pobliskiej wioski. Odszukaj go i sprawdź, co się wydarzyło.",
-        reward: 75
+        description: "Odnajdź kupca i pokonaj ghula.",
+        reward: 75,
+        enemy: {
+            name: "Ghoul",
+            image: "ghul.jpg",
+            hp: 150,
+            damage: 23
+        }
     },
     {
         id: 3,
         name: "Problemy na trakcie",
-        description: "Na trakcie pojawili się bandyci. Mieszkańcy proszą o pomoc w rozwiązaniu problemu.",
-        reward: 50
+        description: "Pokonaj bandytów na trakcie.",
+        reward: 50,
+        enemy: {
+            name: "Bandyta",
+            image: "bandyta.jpg",
+            hp: 120,
+            damage: 20
+        }
     }
 ];
 
 let acceptedQuests = [];
+let completedQuests = [];
 
+let currentQuest = null;
+let currentEnemy = null;
+let enemyHP = 0;
+let attackInterval = null;
+let attackPosition = 0;
+let attackDirection = 1;
+let battleActive = false;
 
-// ELEMENTY HTML
+const $ = id => document.getElementById(id);
 
-const nameElement = document.getElementById("name");
-const levelElement = document.getElementById("level");
-const hpText = document.getElementById("hp-text");
-const hpBar = document.getElementById("hp-bar");
-const goldElement = document.getElementById("gold");
-const damageElement = document.getElementById("damage");
-const weaponElement = document.getElementById("weapon");
-const itemsElement = document.getElementById("items");
-const inventoryMessage = document.getElementById("inventory-message");
+// Zakładki
 
-const shopGold = document.getElementById("shop-gold");
-const shopItems = document.getElementById("shop-items");
-const shopMessage = document.getElementById("shop-message");
+document.querySelectorAll(".tab").forEach(button => {
+    button.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(tab => {
+            tab.classList.remove("active");
+        });
 
-const availableQuests = document.getElementById("available-quests");
-const acceptedQuestsElement = document.getElementById("accepted-quests");
+        document.querySelectorAll(".tab-content").forEach(section => {
+            section.hidden = true;
+        });
 
+        button.classList.add("active");
+        $(button.dataset.tab).hidden = false;
+    });
+});
 
-// AKTUALIZOWANIE POSTACI
+// Wyświetlanie postaci
 
-function updatePlayer() {
-    nameElement.textContent = player.name;
-    levelElement.textContent = "POZIOM " + player.level;
+function renderPlayer() {
+    $("name").textContent = player.name;
+    $("level").textContent = "Poziom " + player.level;
 
-    hpText.textContent = player.hp + " / " + player.maxHP;
+    $("gold").textContent = player.gold;
+    $("shop-gold").textContent = player.gold;
+    $("damage").textContent = player.weapon.dmg;
 
-    hpBar.style.width =
-        (player.hp / player.maxHP * 100) + "%";
+    $("hp-text").textContent = `${player.hp} / ${player.maxHP}`;
+    $("hp-bar").style.width = `${player.hp / player.maxHP * 100}%`;
 
-    goldElement.textContent = player.gold;
-    shopGold.textContent = player.gold;
-
-    damageElement.textContent = player.weapon.dmg;
-    weaponElement.textContent = player.weapon.name;
+    $("weapon").innerHTML = `
+        <div class="item">
+            <img src="${player.weapon.image}" alt="Miecz">
+            <strong>${player.weapon.name}</strong>
+            <p>Obrażenia: ${player.weapon.dmg}</p>
+        </div>
+    `;
 
     renderInventory();
-    renderShop();
-    renderQuests();
 }
-
-
-// EKWIPUNEK
 
 function renderInventory() {
-    itemsElement.innerHTML = "";
+    $("items").innerHTML = "";
 
-    player.inventory.forEach(function(item) {
-        const div = document.createElement("div");
-        div.className = "item";
+    player.inventory.forEach((item, index) => {
+        const element = document.createElement("div");
+        element.className = "item";
 
-        const img = document.createElement("img");
-        img.alt = item.name;
-        img.src = item.image || "";
+        element.innerHTML = `
+            <img src="${item.image}" alt="${item.name}">
+            <strong>${item.name}</strong>
+            <p>Ilość: ${item.quantity}</p>
+        `;
 
-        img.onerror = function() {
-            img.style.display = "none";
-        };
-
-        const p = document.createElement("p");
-        p.textContent = item.name +
-            (item.quantity > 1 ? " x" + item.quantity : "");
-
-        div.appendChild(img);
-        div.appendChild(p);
-
-        // Bomba nie może być używana
         if (item.type !== "bomb") {
-            div.addEventListener("click", function() {
-                useItem(item.type);
-            });
+            element.addEventListener("click", () => useItem(index));
         }
 
-        itemsElement.appendChild(div);
+        $("items").appendChild(element);
     });
 }
 
+function useItem(index) {
+    const item = player.inventory[index];
 
-// WYŚWIETLANIE SKLEPU
+    if (!item || item.quantity <= 0) return;
+
+    if (item.type === "healing") {
+        if (player.hp === player.maxHP) {
+            $("inventory-message").textContent = "Masz pełne zdrowie!";
+            return;
+        }
+
+        player.hp = Math.min(player.maxHP, player.hp + 25);
+        item.quantity--;
+
+        $("inventory-message").textContent = "Użyto mikstury leczenia!";
+    }
+
+    if (item.type === "strength") {
+        player.weapon.dmg += 10;
+        item.quantity--;
+
+        $("inventory-message").textContent = "Twoja broń została wzmocniona!";
+    }
+
+    renderPlayer();
+}
+
+// Sklep
 
 function renderShop() {
-    shopItems.innerHTML = "";
+    $("shop-items").innerHTML = "";
 
-    sklep.forEach(function(item) {
-        const card = document.createElement("div");
-        card.className = "shop-item";
+    shopItems.forEach((item, index) => {
+        const element = document.createElement("div");
+        element.className = "shop-item";
 
-        const image = document.createElement("img");
-        image.className = "shop-item-image";
-        image.src = item.image;
-        image.alt = item.name;
+        element.innerHTML = `
+            <h3>${item.name}</h3>
+            <p>${item.description}</p>
+            <p>Cena: ${item.price} złota</p>
+            <button>KUP</button>
+        `;
 
-        image.onerror = function() {
-            image.style.display = "none";
-        };
-
-        const title = document.createElement("h3");
-        title.textContent = item.name;
-
-        const description = document.createElement("p");
-        description.className = "description";
-        description.textContent = item.description;
-
-        const price = document.createElement("p");
-        price.className = "price";
-        price.textContent = "🪙 " + item.price + " złota";
-
-        const button = document.createElement("button");
-        button.className = "buy-button";
-
-        button.textContent =
-            player.gold >= item.price
-                ? "KUP PRZEDMIOT"
-                : "ZA MAŁO ZŁOTA";
-
-        button.disabled = player.gold < item.price;
-
-        button.addEventListener("click", function() {
-            buyItem(item.id);
+        element.querySelector("button").addEventListener("click", () => {
+            buyItem(index);
         });
 
-        card.appendChild(image);
-        card.appendChild(title);
-        card.appendChild(description);
-        card.appendChild(price);
-        card.appendChild(button);
-
-        shopItems.appendChild(card);
+        $("shop-items").appendChild(element);
     });
 }
 
-
-// DODAWANIE PRZEDMIOTU DO EKWIPUNKU
-
-function addToInventory(name, type, image = "") {
-    const existingItem = player.inventory.find(function(item) {
-        return item.type === type;
-    });
-
-    if (existingItem) {
-        existingItem.quantity =
-            (existingItem.quantity || 1) + 1;
-
-        if (!existingItem.image && image) {
-            existingItem.image = image;
-        }
-    } else {
-        player.inventory.push({
-            name: name,
-            image: image,
-            type: type,
-            quantity: 1
-        });
-    }
-}
-
-
-// UŻYWANIE PRZEDMIOTÓW
-
-function useItem(type) {
-    const item = player.inventory.find(function(item) {
-        return item.type === type;
-    });
-
-    if (!item) {
-        return;
-    }
-
-    switch (type) {
-        case "healing":
-            if (player.hp >= player.maxHP) {
-                inventoryMessage.textContent =
-                    "Masz już pełne zdrowie!";
-                return;
-            }
-
-            player.hp += 30;
-
-            if (player.hp > player.maxHP) {
-                player.hp = player.maxHP;
-            }
-
-            inventoryMessage.textContent =
-                "Użyto mikstury leczenia! Przywrócono zdrowie.";
-
-            break;
-
-        case "strength":
-            player.weapon.dmg += 10;
-
-            inventoryMessage.textContent =
-                "Użyto mikstury siły! Obrażenia zwiększone o 10.";
-
-            break;
-
-        case "sword":
-            inventoryMessage.textContent =
-                "Ten miecz jest już wyposażony.";
-
-            return;
-
-        default:
-            return;
-    }
-
-    // Zmniejszenie ilości przedmiotu
-    item.quantity--;
-
-    // Usunięcie przedmiotu, jeśli ilość wynosi 0
-    if (item.quantity <= 0) {
-        player.inventory = player.inventory.filter(function(inventoryItem) {
-            return inventoryItem !== item;
-        });
-    }
-
-    updatePlayer();
-}
-
-
-// KUPOWANIE PRZEDMIOTÓW
-
-function buyItem(id) {
-    const item = sklep.find(function(shopItem) {
-        return shopItem.id === id;
-    });
-
-    if (!item) {
-        return;
-    }
+function buyItem(index) {
+    const item = shopItems[index];
 
     if (player.gold < item.price) {
-        showMessage("Nie masz wystarczająco złota!", "error");
+        $("shop-message").textContent = "Nie masz wystarczająco złota!";
         return;
     }
 
     player.gold -= item.price;
 
-    switch (item.type) {
-        case "healing":
-            addToInventory(
-                item.name,
-                item.type,
-                item.image
-            );
+    if (item.type === "sword") {
+        player.weapon.dmg += 20;
+        player.weapon.name = "Ulepszony srebrny miecz";
+    } else if (item.type === "strength") {
+        player.inventory.push({
+            name: item.name,
+            image: item.image,
+            type: "strength",
+            quantity: 1
+        });
+    } else {
+        const existing = player.inventory.find(i => i.type === item.type);
 
-            showMessage(
-                "Kupiono miksturę leczenia! Trafiła do ekwipunku.",
-                "success"
-            );
-            break;
-
-        case "strength":
-            addToInventory(
-                item.name,
-                item.type,
-                item.image
-            );
-
-            showMessage(
-                "Kupiono miksturę siły! Trafiła do ekwipunku.",
-                "success"
-            );
-            break;
-
-        case "sword":
-            player.weapon.name = "Ulepszony miecz";
-            player.weapon.dmg += 20;
-
-            addToInventory(
-                item.name,
-                item.type,
-                item.image
-            );
-
-            showMessage(
-                "Kupiono lepszy miecz! Obrażenia +20.",
-                "success"
-            );
-            break;
-
-        case "bomb":
-            addToInventory(
-                item.name,
-                item.type,
-                item.image
-            );
-
-            showMessage(
-                "Kupiono bombę! Trafiła do ekwipunku.",
-                "success"
-            );
-            break;
+        if (existing) {
+            existing.quantity++;
+        } else {
+            player.inventory.push({
+                name: item.name,
+                image: item.image,
+                type: item.type,
+                quantity: 1
+            });
+        }
     }
 
-    updatePlayer();
+    $("shop-message").textContent = `Kupiono: ${item.name}`;
+
+    renderPlayer();
 }
 
-
-// WYŚWIETLANIE QUESTÓW
+// Questy
 
 function renderQuests() {
-    availableQuests.innerHTML = "";
-    acceptedQuestsElement.innerHTML = "";
+    $("available-quests").innerHTML = "";
+    $("accepted-quests").innerHTML = "";
+    $("completed-quests").innerHTML = "";
 
-    if (quests.length === 0) {
-        availableQuests.innerHTML =
-            '<p class="no-quests">Brak dostępnych zadań.</p>';
-    }
+    quests.forEach(quest => {
+        const isAccepted = acceptedQuests.includes(quest.id);
+        const isCompleted = completedQuests.includes(quest.id);
 
-    quests.forEach(function(quest) {
-        const card = document.createElement("div");
-        card.className = "quest-item";
+        if (isAccepted || isCompleted) return;
 
-        const title = document.createElement("h3");
-        title.textContent = quest.name;
+        const element = document.createElement("div");
+        element.className = "quest-item";
 
-        const description = document.createElement("p");
-        description.className = "description";
-        description.textContent = quest.description;
+        element.innerHTML = `
+            <h3>${quest.name}</h3>
+            <p>${quest.description}</p>
+            <p>Nagroda: ${quest.reward} złota</p>
+            <button>PRZYJMIJ</button>
+        `;
 
-        const reward = document.createElement("p");
-        reward.className = "quest-reward";
-        reward.textContent = "🪙 Nagroda: " + quest.reward + " złota";
-
-        const button = document.createElement("button");
-        button.className = "quest-button";
-        button.textContent = "PRZYJMIJ ZADANIE";
-
-        button.addEventListener("click", function() {
+        element.querySelector("button").addEventListener("click", () => {
             acceptQuest(quest.id);
         });
 
-        card.appendChild(title);
-        card.appendChild(description);
-        card.appendChild(reward);
-        card.appendChild(button);
-
-        availableQuests.appendChild(card);
+        $("available-quests").appendChild(element);
     });
 
-    if (acceptedQuests.length === 0) {
-        acceptedQuestsElement.innerHTML =
-            '<p class="no-quests">Nie masz jeszcze żadnych przyjętych zadań.</p>';
-    }
+    acceptedQuests.forEach(id => {
+        const quest = quests.find(q => q.id === id);
 
-    acceptedQuests.forEach(function(quest) {
-        const card = document.createElement("div");
-        card.className = "quest-item";
+        const element = document.createElement("div");
+        element.className = "quest-item";
 
-        const title = document.createElement("h3");
-        title.textContent = quest.name;
+        element.innerHTML = `
+            <h3>${quest.name}</h3>
+            <p>${quest.description}</p>
+            <button>ROZPOCZNIJ</button>
+        `;
 
-        const description = document.createElement("p");
-        description.className = "description";
-        description.textContent = quest.description;
+        element.querySelector("button").addEventListener("click", () => {
+            startBattle(id);
+        });
 
-        const status = document.createElement("p");
-        status.className = "quest-status";
-        status.textContent = "ZADANIE PRZYJĘTE";
+        $("accepted-quests").appendChild(element);
+    });
 
-        card.appendChild(title);
-        card.appendChild(description);
-        card.appendChild(status);
+    completedQuests.forEach(id => {
+        const quest = quests.find(q => q.id === id);
 
-        acceptedQuestsElement.appendChild(card);
+        const element = document.createElement("div");
+        element.className = "quest-item";
+
+        element.innerHTML = `
+            <h3>${quest.name}</h3>
+            <p>Ukończono!</p>
+        `;
+
+        $("completed-quests").appendChild(element);
     });
 }
 
-
-// PRZYJMOWANIE QUESTÓW
-
 function acceptQuest(id) {
-    const questIndex = quests.findIndex(function(quest) {
-        return quest.id === id;
-    });
-
-    if (questIndex === -1) {
-        return;
-    }
-
-    const quest = quests.splice(questIndex, 1)[0];
-
-    acceptedQuests.push(quest);
-
+    acceptedQuests.push(id);
     renderQuests();
 }
 
+// Walka
 
-// KOMUNIKATY
+function startBattle(id) {
+    currentQuest = quests.find(q => q.id === id);
+    currentEnemy = currentQuest.enemy;
+    enemyHP = currentEnemy.hp;
+    battleActive = true;
 
-function showMessage(message, type) {
-    shopMessage.textContent = message;
-    shopMessage.className = "shop-message " + type;
+    document.querySelectorAll(".tab-content").forEach(section => {
+        section.hidden = true;
+    });
+
+    document.querySelector(".tabs").hidden = true;
+    $("battle").hidden = false;
+
+    $("battle-quest-name").textContent = currentQuest.name;
+
+    $("enemy-icon").innerHTML = `
+        <img src="${currentEnemy.image}" alt="${currentEnemy.name}">
+    `;
+
+    $("enemy-name").textContent = currentEnemy.name;
+
+    $("battle-log").textContent = "Rozpoczyna się walka!";
+
+    $("attack-panel").hidden = true;
+    $("item-panel").hidden = true;
+    $("battle-result").hidden = true;
+
+    $("fight-button").hidden = false;
+    $("item-button").hidden = false;
+    $("escape-button").hidden = false;
+
+    $("battle-player-hp").textContent = `${player.hp} / ${player.maxHP}`;
+    $("battle-player-hp-bar").style.width = `${player.hp / player.maxHP * 100}%`;
+
+    updateEnemyHP();
 }
 
+// Pasek zdrowia przeciwnika
 
-// ZMIANA ZAKŁADEK
+function updateEnemyHP() {
+    $("enemy-hp-text").textContent = `${enemyHP} / ${currentEnemy.hp}`;
+    $("enemy-hp-bar").style.width = `${Math.max(0, enemyHP / currentEnemy.hp * 100)}%`;
+}
 
-document.querySelectorAll(".tab").forEach(function(tab) {
-    tab.addEventListener("click", function() {
-        document.querySelectorAll(".tab").forEach(function(button) {
-            button.classList.remove("active");
-        });
+// Atak Geralta
 
-        document.querySelectorAll(".tab-content").forEach(function(content) {
-            content.hidden = true;
-        });
+function startAttack() {
+    if (!battleActive) return;
 
-        tab.classList.add("active");
+    $("attack-panel").hidden = false;
+    $("item-panel").hidden = true;
 
-        document.getElementById(tab.dataset.tab).hidden = false;
-    });
+    $("fight-button").hidden = true;
+    $("item-button").hidden = true;
+    $("escape-button").hidden = true;
+
+    attackPosition = 0;
+    attackDirection = 1;
+
+    clearInterval(attackInterval);
+
+    attackInterval = setInterval(() => {
+        attackPosition += attackDirection * 2.5;
+
+        if (attackPosition >= 100 || attackPosition <= 0) {
+            attackDirection *= -1;
+        }
+
+        $("attack-marker").style.left = attackPosition + "%";
+    }, 20);
+}
+
+$("attack-confirm").addEventListener("click", () => {
+    if (!battleActive) return;
+
+    clearInterval(attackInterval);
+
+    const accuracy = Math.abs(attackPosition - 50);
+
+    let multiplier;
+
+    if (accuracy < 8) {
+        multiplier = 2;
+    } else if (accuracy < 25) {
+        multiplier = 1.5;
+    } else if (accuracy < 55) {
+        multiplier = 1;
+    } else {
+        multiplier = 0.5;
+    }
+
+    const damage = Math.floor(player.weapon.dmg * multiplier);
+
+    enemyHP = Math.max(0, enemyHP - damage);
+
+    $("attack-panel").hidden = true;
+
+    $("battle-log").textContent = `Geralt zadaje ${damage} obrażeń!`;
+
+    updateEnemyHP();
+
+    if (enemyHP <= 0) {
+        winBattle();
+        return;
+    }
+
+    enemyTurn();
 });
 
+// Tura przeciwnika
 
-// URUCHOMIENIE
+function enemyTurn() {
+    if (!battleActive) return;
 
-updatePlayer();
+    const damage = Math.floor(Math.random() * 7) + currentEnemy.damage;
+
+    player.hp = Math.max(0, player.hp - damage);
+
+    $("battle-player-hp").textContent = `${player.hp} / ${player.maxHP}`;
+    $("battle-player-hp-bar").style.width = `${player.hp / player.maxHP * 100}%`;
+
+    $("battle-log").textContent += ` ${currentEnemy.name} zadaje ${damage} obrażeń!`;
+
+    if (player.hp <= 0) {
+        loseBattle();
+        return;
+    }
+
+    $("fight-button").hidden = false;
+    $("item-button").hidden = false;
+    $("escape-button").hidden = false;
+}
+
+// Przedmioty w walce
+
+$("item-button").addEventListener("click", () => {
+    if (!battleActive) return;
+
+    $("item-panel").hidden = false;
+    $("attack-panel").hidden = true;
+
+    $("fight-button").hidden = true;
+    $("item-button").hidden = true;
+    $("escape-button").hidden = true;
+
+    renderBattleItems();
+});
+
+function renderBattleItems() {
+    $("battle-items").innerHTML = "";
+
+    player.inventory.forEach((item, index) => {
+        if (item.quantity <= 0) return;
+
+        const element = document.createElement("div");
+        element.className = "battle-item";
+
+        let description = "";
+
+        if (item.type === "healing") {
+            description = "Przywraca 25 HP";
+        } else if (item.type === "strength") {
+            description = "Zwiększa obrażenia o 10";
+        } else if (item.type === "bomb") {
+            description = "Zadaje 25 obrażeń";
+        }
+
+        element.innerHTML = `
+            <img src="${item.image}" alt="${item.name}">
+            <div class="battle-item-info">
+                <strong>${item.name}</strong>
+                <p>${description}</p>
+                <small>Ilość: ${item.quantity}</small>
+            </div>
+        `;
+
+        element.addEventListener("click", () => {
+            useBattleItem(index);
+        });
+
+        $("battle-items").appendChild(element);
+    });
+
+    if ($("battle-items").innerHTML === "") {
+        $("battle-items").textContent = "Nie masz żadnych przedmiotów!";
+    }
+}
+
+function useBattleItem(index) {
+    if (!battleActive) return;
+
+    const item = player.inventory[index];
+
+    if (!item || item.quantity <= 0) return;
+
+    if (item.type === "healing") {
+        if (player.hp === player.maxHP) {
+            $("battle-log").textContent = "Masz pełne zdrowie!";
+            return;
+        }
+
+        player.hp = Math.min(player.maxHP, player.hp + 25);
+        item.quantity--;
+
+        $("battle-log").textContent = "Geralt używa mikstury leczenia!";
+    } else if (item.type === "strength") {
+        player.weapon.dmg += 10;
+        item.quantity--;
+
+        $("battle-log").textContent = "Geralt wzmacnia swoją broń!";
+    } else if (item.type === "bomb") {
+        enemyHP = Math.max(0, enemyHP - 25);
+        item.quantity--;
+
+        $("battle-log").textContent = "Geralt rzuca bombę! Przeciwnik otrzymuje 25 obrażeń!";
+
+        updateEnemyHP();
+
+        if (enemyHP <= 0) {
+            $("item-panel").hidden = true;
+            winBattle();
+            return;
+        }
+    }
+
+    $("item-panel").hidden = true;
+
+    $("battle-player-hp").textContent = `${player.hp} / ${player.maxHP}`;
+    $("battle-player-hp-bar").style.width = `${player.hp / player.maxHP * 100}%`;
+
+    renderPlayer();
+    enemyTurn();
+}
+
+$("close-items").addEventListener("click", () => {
+    $("item-panel").hidden = true;
+
+    $("fight-button").hidden = false;
+    $("item-button").hidden = false;
+    $("escape-button").hidden = false;
+});
+
+// Ucieczka
+
+$("escape-button").addEventListener("click", () => {
+    if (!battleActive) return;
+
+    endBattle();
+
+    $("battle-result").hidden = false;
+    $("result-title").textContent = "Uciekłeś!";
+    $("result-description").textContent = "Zadanie nadal czeka na ukończenie.";
+});
+
+// Zwycięstwo
+
+function winBattle() {
+    endBattle();
+
+    player.gold += currentQuest.reward;
+
+    acceptedQuests = acceptedQuests.filter(id => id !== currentQuest.id);
+    completedQuests.push(currentQuest.id);
+
+    $("battle-result").hidden = false;
+    $("result-title").textContent = "Zwycięstwo!";
+    $("result-description").textContent =
+        `Pokonałeś przeciwnika i otrzymujesz ${currentQuest.reward} złota!`;
+
+    renderPlayer();
+}
+
+// Porażka
+
+function loseBattle() {
+    endBattle();
+
+    $("battle-result").hidden = false;
+    $("result-title").textContent = "Porażka!";
+    $("result-description").textContent =
+        "Geralt został pokonany. Po powrocie odzyskasz część zdrowia.";
+
+    player.hp = 30;
+}
+
+// Zakończenie walki
+
+function endBattle() {
+    battleActive = false;
+
+    clearInterval(attackInterval);
+
+    $("attack-panel").hidden = true;
+    $("item-panel").hidden = true;
+
+    $("fight-button").hidden = true;
+    $("item-button").hidden = true;
+    $("escape-button").hidden = true;
+
+    $("battle-result").hidden = false;
+}
+
+// Powrót do questów
+
+$("return-button").addEventListener("click", () => {
+    $("battle").hidden = true;
+    $("battle-result").hidden = true;
+
+    document.querySelector(".tabs").hidden = false;
+
+    document.querySelectorAll(".tab-content").forEach(section => {
+        section.hidden = true;
+    });
+
+    $("questy").hidden = false;
+
+    document.querySelectorAll(".tab").forEach(tab => {
+        tab.classList.remove("active");
+    });
+
+    document.querySelector('[data-tab="questy"]').classList.add("active");
+
+    renderPlayer();
+    renderQuests();
+});
+
+// Przyciski walki
+
+$("fight-button").addEventListener("click", startAttack);
+
+// Uruchomienie strony
+
+renderPlayer();
+renderShop();
+renderQuests();

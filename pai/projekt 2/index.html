@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -7,13 +8,12 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <main class="character">
 
         <header class="header">
-            <div>
-                <h1 id="name"></h1>
-                <p class="level" id="level"></p>
-            </div>
+            <h1 id="name">Geralt</h1>
+            <span id="level">Poziom 13</span>
         </header>
 
         <nav class="tabs">
@@ -22,93 +22,128 @@
             <button class="tab" data-tab="questy">QUESTY</button>
         </nav>
 
-        <!-- KARTA POSTACI -->
-        <div id="postac" class="tab-content">
-
-            <section class="health">
+        <section id="postac" class="tab-content">
+            <div class="health">
                 <div class="health-info">
-                    <span>ZDROWIE</span>
-                    <span id="hp-text"></span>
+                    <span>Zdrowie</span>
+                    <span id="hp-text">85 / 100</span>
+                </div>
+                <div class="health-track">
+                    <div id="hp-bar" class="health-fill"></div>
+                </div>
+            </div>
+
+            <div class="stats">
+                <div class="stat">
+                    <span>Złoto</span>
+                    <strong id="gold">100</strong>
+                </div>
+                <div class="stat">
+                    <span>Obrażenia</span>
+                    <strong id="damage">15</strong>
+                </div>
+            </div>
+
+            <div class="weapon">
+                <h2>Broń</h2>
+                <div id="weapon"></div>
+            </div>
+
+            <div class="inventory">
+                <h2>Ekwipunek</h2>
+                <div id="items" class="items"></div>
+                <p id="inventory-message"></p>
+            </div>
+        </section>
+
+        <section id="sklep" class="tab-content" hidden>
+            <h2>Sklep</h2>
+            <p>Złoto: <strong id="shop-gold">100</strong></p>
+            <div id="shop-items" class="shop-items"></div>
+            <p id="shop-message"></p>
+        </section>
+
+        <section id="questy" class="tab-content" hidden>
+            <h2>Dostępne zadania</h2>
+            <div id="available-quests"></div>
+
+            <h2>Przyjęte zadania</h2>
+            <div id="accepted-quests"></div>
+
+            <h2>Ukończone zadania</h2>
+            <div id="completed-quests"></div>
+        </section>
+
+        <section id="battle" hidden>
+            <div class="battle-header">
+                <h2 id="battle-quest-name">Walka</h2>
+            </div>
+
+            <div class="enemy">
+                <div id="enemy-icon" class="enemy-icon"></div>
+                <h2 id="enemy-name">Przeciwnik</h2>
+
+                <div class="enemy-health-info">
+                    <span>HP przeciwnika</span>
+                    <span id="enemy-hp-text">100 / 100</span>
                 </div>
 
                 <div class="health-track">
-                    <div class="health-fill" id="hp-bar"></div>
+                    <div id="enemy-hp-bar" class="enemy-health-fill"></div>
                 </div>
-            </section>
+            </div>
 
-            <section class="stats">
-                <div class="stat">
-                    <span class="stat-icon">🪙</span>
-                    <p>ZŁOTO</p>
-                    <h2 id="gold"></h2>
-                </div>
+            <div id="battle-log" class="battle-log">
+                Rozpoczyna się walka!
+            </div>
 
-                <div class="stat">
-                    <span class="stat-icon">⚔️</span>
-                    <p>OBRAŻENIA</p>
-                    <h2 id="damage"></h2>
-                </div>
-            </section>
+            <div id="attack-panel" class="attack-panel" hidden>
+                <h3>Wybierz moment ataku!</h3>
 
-            <section class="weapon">
-                <div class="weapon-icon">⚔️</div>
-                <div>
-                    <p class="subtitle">AKTUALNA BROŃ</p>
-                    <h2 id="weapon"></h2>
-                </div>
-            </section>
-
-            <section class="inventory">
-                <h2>EKWIPUNEK</h2>
-                <div class="items" id="items"></div>
-                <p id="inventory-message" class="inventory-message"></p>
-            </section>
-
-        </div>
-
-        <!-- SKLEP -->
-        <div id="sklep" class="tab-content" hidden>
-
-            <section class="shop-header">
-                <div>
-                    <p class="subtitle">WIEDŹMIŃSKIE TOWARY</p>
-                    <h2>Sklep</h2>
+                <div id="attack-track" class="attack-track">
+                    <div class="attack-center"></div>
+                    <div id="attack-marker" class="attack-marker"></div>
                 </div>
 
-                <p class="shop-gold">
-                    🪙 <span id="shop-gold"></span> złota
-                </p>
-            </section>
+                <button id="attack-confirm" class="battle-button attack-button">
+                    ATAKUJ
+                </button>
+            </div>
 
-            <p id="shop-message" class="shop-message">
-                Wybierz przedmiot, który chcesz kupić.
-            </p>
+            <div id="item-panel" class="item-panel" hidden>
+                <h3>Wybierz przedmiot</h3>
+                <div id="battle-items"></div>
 
-            <section class="shop-items" id="shop-items"></section>
+                <button id="close-items" class="battle-button secondary-button">
+                    POWRÓT
+                </button>
+            </div>
 
-        </div>
-
-        <!-- QUESTY -->
-        <div id="questy" class="tab-content" hidden>
-
-            <section class="quest-header">
-                <div>
-                    <p class="subtitle">WIEDŹMIŃSKIE ZLECENIA</p>
-                    <h2>Questy</h2>
+            <div class="player-battle">
+                <div class="battle-player-info">
+                    <span>Geralt</span>
+                    <span id="battle-player-hp">100 / 100</span>
                 </div>
-            </section>
 
-            <section class="quests-section">
-                <h2>DOSTĘPNE ZADANIA</h2>
-                <div id="available-quests" class="quest-list"></div>
-            </section>
+                <div class="health-track">
+                    <div id="battle-player-hp-bar" class="health-fill"></div>
+                </div>
+            </div>
 
-            <section class="quests-section">
-                <h2>PRZYJĘTE ZADANIA</h2>
-                <div id="accepted-quests" class="quest-list"></div>
-            </section>
+            <div class="battle-actions">
+                <button id="fight-button" class="battle-button">FIGHT</button>
+                <button id="item-button" class="battle-button">ITEM</button>
+                <button id="escape-button" class="battle-button">ESCAPE</button>
+            </div>
 
-        </div>
+            <div id="battle-result" class="battle-result" hidden>
+                <h2 id="result-title"></h2>
+                <p id="result-description"></p>
+                <button id="return-button" class="battle-button">
+                    POWRÓT
+                </button>
+            </div>
+        </section>
 
     </main>
 
