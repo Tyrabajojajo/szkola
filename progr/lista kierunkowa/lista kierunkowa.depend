@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1794467635 source:c:\users\administrator\desktop\5tp\gr2\zapis do pliku\lista kierunkowa\main.cpp
+	<iostream>
+	<chrono>
+	<vector>
+
