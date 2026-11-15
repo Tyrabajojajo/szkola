@@ -87,6 +87,29 @@ h2 {
     background: #b42e2e;
 }
 
+.experience {
+    margin: 20px 0;
+}
+
+.experience-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.xp-track {
+    width: 100%;
+    height: 13px;
+    background: #333;
+}
+
+.xp-fill {
+    width: 0%;
+    height: 100%;
+    background: #d5a34b;
+    transition: width 0.3s;
+}
+
 .stats {
     display: flex;
     gap: 20px;

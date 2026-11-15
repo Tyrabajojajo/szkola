@@ -1,7 +1,9 @@
 
 const player = {
     name: "Geralt",
-    level: 13,
+    level: 1,
+    xp: 0,
+    maxXP: 100,
     gold: 100,
     hp: 85,
     maxHP: 100,
@@ -63,6 +65,7 @@ const quests = [
         name: "Bestia z Białego Sadu",
         description: "Pokonaj wilka terroryzującego okolicę.",
         reward: 100,
+        xp: 100,
         enemy: {
             name: "Wilk",
             image: "wilk.jpg",
@@ -75,6 +78,7 @@ const quests = [
         name: "Zaginiony kupiec",
         description: "Odnajdź kupca i pokonaj ghula.",
         reward: 75,
+        xp: 150,
         enemy: {
             name: "Ghoul",
             image: "ghul.jpg",
@@ -87,6 +91,7 @@ const quests = [
         name: "Problemy na trakcie",
         description: "Pokonaj bandytów na trakcie.",
         reward: 50,
+        xp: 75,
         enemy: {
             name: "Bandyta",
             image: "bandyta.jpg",
@@ -138,6 +143,9 @@ function renderPlayer() {
 
     $("hp-text").textContent = `${player.hp} / ${player.maxHP}`;
     $("hp-bar").style.width = `${player.hp / player.maxHP * 100}%`;
+
+    $("xp-text").textContent = `${player.xp} / ${player.maxXP}`;
+    $("xp-bar").style.width = `${player.xp / player.maxXP * 100}%`;
 
     $("weapon").innerHTML = `
         <div class="item">
@@ -282,6 +290,7 @@ function renderQuests() {
             <h3>${quest.name}</h3>
             <p>${quest.description}</p>
             <p>Nagroda: ${quest.reward} złota</p>
+            <p>Doświadczenie: ${quest.xp} XP</p>
             <button>PRZYJMIJ</button>
         `;
 
@@ -301,6 +310,8 @@ function renderQuests() {
         element.innerHTML = `
             <h3>${quest.name}</h3>
             <p>${quest.description}</p>
+            <p>Nagroda: ${quest.reward} złota</p>
+            <p>Doświadczenie: ${quest.xp} XP</p>
             <button>ROZPOCZNIJ</button>
         `;
 
@@ -582,10 +593,32 @@ $("escape-button").addEventListener("click", () => {
 
     endBattle();
 
-    $("battle-result").hidden = false;
     $("result-title").textContent = "Uciekłeś!";
     $("result-description").textContent = "Zadanie nadal czeka na ukończenie.";
 });
+
+// Zdobywanie doświadczenia
+
+function gainXP(amount) {
+    player.xp += amount;
+
+    let levelUps = 0;
+
+    while (player.xp >= player.maxXP) {
+        player.xp -= player.maxXP;
+        player.level++;
+
+        player.maxXP += 50;
+        levelUps++;
+    }
+
+    if (levelUps > 0) {
+        $("battle-log").textContent =
+            `Awans! Geralt osiągnął poziom ${player.level}!`;
+    }
+
+    renderPlayer();
+}
 
 // Zwycięstwo
 
@@ -594,13 +627,26 @@ function winBattle() {
 
     player.gold += currentQuest.reward;
 
+    const xpReward = currentQuest.xp;
+
     acceptedQuests = acceptedQuests.filter(id => id !== currentQuest.id);
     completedQuests.push(currentQuest.id);
 
+    const previousLevel = player.level;
+
+    gainXP(xpReward);
+
     $("battle-result").hidden = false;
     $("result-title").textContent = "Zwycięstwo!";
-    $("result-description").textContent =
-        `Pokonałeś przeciwnika i otrzymujesz ${currentQuest.reward} złota!`;
+
+    let description =
+        `Pokonałeś przeciwnika! Otrzymujesz ${currentQuest.reward} złota i ${xpReward} XP!`;
+
+    if (player.level > previousLevel) {
+        description += ` Awansowałeś na poziom ${player.level}!`;
+    }
+
+    $("result-description").textContent = description;
 
     renderPlayer();
 }
