@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1795073469 source:/home/szymon/Projects/drzewo binarne/main.cpp
+	<iostream>
+	<fstream>
+
+1795073469 source:/home/szymon/szkola/progr/drzewo binarne/main.cpp
+	<iostream>
+	<fstream>
+
