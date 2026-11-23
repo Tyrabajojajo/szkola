@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 650" width="1000" height="650">
+  <defs>
+    
+    <marker id="arrow" viewBox="0 0 10 10" refX="22" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748b" />
+    </marker>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="22" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#ef4444" />
+    </marker>
+    
+    <style>
+      .bg { fill: #f8fafc; }
+      .state-box { fill: #ffffff; stroke: #334155; stroke-width: 2; rx: 10; ry: 10; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.05)); }
+      .state-active { fill: #e0f2fe; stroke: #0284c7; stroke-width: 3; rx: 10; ry: 10; }
+      .title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 22px; font-weight: bold; fill: #0f172a; text-anchor: middle; }
+      .state-title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; font-weight: bold; fill: #1e293b; text-anchor: middle; }
+      .state-subtitle { font-family: monospace; font-size: 11px; fill: #64748b; text-anchor: middle; }
+      .transition-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 11px; font-weight: 600; fill: #475569; text-anchor: middle; background: white; }
+      .transition-label-red { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 11px; font-weight: bold; fill: #dc2626; text-anchor: middle; }
+      .line { stroke: #64748b; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+      .line-red { stroke: #ef4444; stroke-width: 2.5; fill: none; marker-end: url(#arrow-red); stroke-dasharray: 5,5; }
+    </style>
+  </defs>
+
+  
+  <rect class="bg" width="1000" height="650" rx="12" />
+
+  
+  <text x="500" y="45" class="title">Diagram Stanów - Sterowanie Bramą Arduino</text>
+
+  
+  <g transform="translate(100, 300)">
+    <rect x="-90" y="-35" width="180" height="70" class="state-box" />
+    <text x="0" y="-8" class="state-title">ZAMKNIĘTA</text>
+    <text x="0" y="12" class="state-subtitle">STAN_ZAMKNIETA (0)</text>
+  </g>
+
+  
+  <g transform="translate(350, 150)">
+    <rect x="-90" y="-35" width="180" height="70" class="state-box" />
+    <text x="0" y="-8" class="state-title">OTWIERANIE</text>
+    <text x="0" y="12" class="state-subtitle">STAN_OTWIERANIE (4)</text>
+  </g>
+
+  
+  <g transform="translate(600, 300)">
+    <rect x="-90" y="-35" width="180" height="70" class="state-box" />
+    <text x="0" y="-8" class="state-title">OTWARTA</text>
+    <text x="0" y="12" class="state-subtitle">STAN_OTWARTA (1)</text>
+  </g>
+
+  
+  <g transform="translate(350, 480)">
+    <rect x="-90" y="-35" width="180" height="70" class="state-box" />
+    <text x="0" y="-8" class="state-title">ZAMYKANIE</text>
+    <text x="0" y="12" class="state-subtitle">STAN_ZAMYKANIE (5)</text>
+  </g>
+
+  
+  <g transform="translate(600, 100)">
+    <rect x="-105" y="-35" width="210" height="70" class="state-box" />
+    <text x="0" y="-8" class="state-title">ZATRZYMANA (Otwieranie)</text>
+    <text x="0" y="12" class="state-subtitle">STAN_ZATRZYMANA_OTW (6)</text>
+  </g>
+
+  
+  <g transform="translate(600, 530)">
+    <rect x="-100" y="-35" width="200" height="70" class="state-box" />
+    <text x="0" y="-8" class="state-title">ZATRZYMANA (Zamykanie)</text>
+    <text x="0" y="12" class="state-subtitle">STAN_ZATRZYMANA_ZAM (7)</text>
+  </g>
+
+
+  
+
+  
+  <path d="M 180,275 Q 260,200 270,175" class="line" />
+  <rect x="200" y="215" width="85" height="18" fill="#f8fafc" rx="3" />
+  <text x="242" y="228" class="transition-label">Pilot POWER</text>
+
+  
+  <path d="M 430,175 Q 520,200 520,275" class="line" />
+  <rect x="445" y="215" width="85" height="18" fill="#f8fafc" rx="3" />
+  <text x="487" y="228" class="transition-label">Osiągnięto cel</text>
+
+  
+  <path d="M 520,325 Q 520,400 440,460" class="line" />
+  <rect x="490" y="380" width="85" height="18" fill="#f8fafc" rx="3" />
+  <text x="532" y="393" class="transition-label">Pilot POWER</text>
+
+  
+  <path d="M 270,505 Q 140,480 120,335" class="line" />
+  <rect x="155" y="430" width="85" height="18" fill="#f8fafc" rx="3" />
+  <text x="197" y="443" class="transition-label">Osiągnięto cel</text>
+
+  
+  <path d="M 440,140 L 495,115" class="line" />
+  <rect x="440" y="115" width="55" height="18" fill="#f8fafc" rx="3" />
+  <text x="467" y="128" class="transition-label">POWER</text>
+
+  
+  <path d="M 660,135 Q 730,280 435,465" class="line" />
+  <rect x="630" y="280" width="85" height="18" fill="#f8fafc" rx="3" />
+  <text x="672" y="293" class="transition-label">Pilot POWER</text>
+
+  
+  <path d="M 440,505 L 500,525" class="line" />
+  <rect x="450" y="525" width="55" height="18" fill="#f8fafc" rx="3" />
+  <text x="477" y="538" class="transition-label">POWER</text>
+
+  
+  <path d="M 660,495 Q 730,350 435,175" class="line" />
+  <rect x="635" y="360" width="85" height="18" fill="#f8fafc" rx="3" />
+  <text x="677" y="373" class="transition-label">Pilot POWER</text>
+
+  
+  <path d="M 350,445 L 350,185" class="line-red" />
+  <rect x="260" y="305" width="180" height="22" fill="#fee2e2" rx="4" stroke="#fecaca" />
+  <text x="350" y="320" class="transition-label-red">Czujnik PIR (Wykryto ruch!)</text>
+
+</svg>
